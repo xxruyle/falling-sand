@@ -84,19 +84,28 @@ void RunPhysics()
         for (int x = WORLD_WIDTH; x >= 0; x--) {
             if (IsValidCell(x, y) && IsSandCell(x, y)) {
                 if (IsValidCell(x, y + 1)) {
+                    int randomValue = GetRandomValue(0, 100);
+                    int dir;
+                    if (randomValue < 50) {
+                        dir = -1;
+                    }
+                    else {
+                        dir = 1;
+                    }
+
                     if (!IsSolidCell(x, y + 1)) {
                         // move cell down
                         world[x][y] = 0;
                         world[x][y + 1] = 1;
                     }
-                    else if (IsValidCell(x - 1, y + 1) && !IsSolidCell(x - 1, y + 1)) {
+                    else if (IsValidCell(x + dir, y + 1) && !IsSolidCell(x + dir, y + 1)) {
                         world[x][y] = 0;
-                        world[x - 1][y + 1] = 1;
+                        world[x + dir][y + 1] = 1;
                     }
-                    else if (IsValidCell(x + 1, y + 1) && !IsSolidCell(x + 1, y + 1)) {
-                        world[x][y] = 0;
-                        world[x + 1][y + 1] = 1;
-                    }
+                    /* else if (IsValidCell(x + 1, y + 1) && !IsSolidCell(x + 1, y + 1)) { */
+                    /*     world[x][y] = 0; */
+                    /*     world[x + 1][y + 1] = 1; */
+                    /* } */
                 }
             }
             else if (IsValidCell(x, y) && IsWaterCell(x, y)) {
@@ -159,6 +168,17 @@ void AddToWorld()
         }
     }
 
+    if (IsKeyDown(KEY_P)) { // place
+        for (int x = (int)mousePos.x - 4; x < (int)mousePos.x + 4; x++) {
+            for (int y = (int)mousePos.y - 4; y < (int)mousePos.y + 4; y++) {
+                if (IsValidCell(x, y)) {
+                    int randomValue = GetRandomValue(0, 100);
+                    if (randomValue > 90)
+                        world[x][y] = 1;
+                }
+            }
+        }
+    }
     DrawText(mousePosStr.c_str(), SCREEN_WIDTH - 300, 20, 20, RAYWHITE);
 
     std::string sandCountStr = std::to_string(SandCount);
